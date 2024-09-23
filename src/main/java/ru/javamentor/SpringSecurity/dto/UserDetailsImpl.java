@@ -1,4 +1,4 @@
-package ru.javamentor.SpringSecurity.security;
+package ru.javamentor.SpringSecurity.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,16 +6,16 @@ import ru.javamentor.SpringSecurity.models.User;
 
 import java.util.Collection;
 
-public class MyUserDetails implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
     private final User user;
 
-    public MyUserDetails(User user) {
+    public UserDetailsImpl(User user) {
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.user.getRoles();
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javamentor.SpringSecurity.models.Role;
 import ru.javamentor.SpringSecurity.models.User;
 
 @Component
@@ -24,11 +25,26 @@ public class ApplicationStart implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        entityManager.persist(new Role("USER"));
+        entityManager.persist(new Role("ADMIN"));
+        Role userRole = entityManager.find(Role.class, 1);
+        Role adminRole = entityManager.find(Role.class, 2);
+
         User user = new User();
         user.setUsername("user");
-        user.setEmail("user@email.com");
-        user.setBio("i am user bio");
+        user.setEmail("user@user.com");
+        user.setBio("i am user");
         user.setPassword(passwordEncoder.encode("user"));
+        user.addRole(userRole);
         entityManager.persist(user);
+
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setEmail("admin@admin.com");
+        admin.setBio("i am admin");
+        admin.setPassword(passwordEncoder.encode("admin"));
+        admin.addRole(userRole);
+        admin.addRole(adminRole);
+        entityManager.persist(admin);
     }
 }

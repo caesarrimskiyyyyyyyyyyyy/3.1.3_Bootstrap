@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
@@ -16,7 +19,6 @@ import lombok.Setter;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "email")
@@ -27,26 +29,34 @@ public class User {
     private String username;
 
     @Size(min = 3, max = 128, message = "at least 3 characters")
-    @Column(name = "password", nullable = false, unique = true)
+    @Column(name = "user_password", nullable = false, unique = true)
     private String password;
 
     @Column(name = "bio")
     private String bio;
 
-    /*
-    *
-    * realise equals, hashcode and toString
-    * and relations many-to-many (POJO Role)
-    *
-    * */
+    @ManyToMany()
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+        role.getUsers().remove(this);
+    }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", bio='" + bio + '\'' +
+                "username='" + username + '\'' +
                 '}';
     }
 }
