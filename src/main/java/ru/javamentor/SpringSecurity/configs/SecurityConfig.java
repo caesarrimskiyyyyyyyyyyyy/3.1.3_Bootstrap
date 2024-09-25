@@ -18,30 +18,33 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private final AuthenticationSuccessHandlerImpl successHandler;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, AuthenticationSuccessHandlerImpl successHandler) {
         this.userDetailsService = userDetailsService;
+        this.successHandler = successHandler;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login/**").permitAll()
-                        .requestMatchers("/user/**").hasRole("USER")
-                        .anyRequest().authenticated())
-                .authenticationProvider(daoAuthProvider());
-
-        http
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().denyAll())
                 .formLogin(login -> login
                         .loginPage("/login")
+                        .successHandler(successHandler)
                         .permitAll())
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/"));
-
-        return http.build();
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll())
+                .authenticationProvider(daoAuthProvider())
+                .build();
     }
 
     @Bean
