@@ -9,23 +9,26 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        Set<String> roles = authentication.getAuthorities().stream()
+        String redirectUrl = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet());
+                .flatMap(role -> {
+                    if (role.equals("ROLE_ADMIN")) {
+                        return Stream.of("/admin");
+                    } else if (role.equals("ROLE_USER")) {
+                        return Stream.of("/user/profile");
+                    } else {
+                        return Stream.empty();
+                    }
+                })
+                .findFirst()
+                .orElse("/login");
 
-        if (roles.contains("ROLE_ADMIN")) {
-            response.sendRedirect("/admin");
-        } else if (roles.contains("ROLE_USER")) {
-            response.sendRedirect("/user/profile");
-        } else {
-            response.sendRedirect("/login");
-        }
+        response.sendRedirect(redirectUrl);
     }
 }
