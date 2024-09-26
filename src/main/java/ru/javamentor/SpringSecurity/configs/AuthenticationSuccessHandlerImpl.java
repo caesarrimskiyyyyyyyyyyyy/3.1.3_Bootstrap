@@ -17,15 +17,9 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String redirectUrl = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .flatMap(role -> {
-                    if (role.equals("ROLE_ADMIN")) {
-                        return Stream.of("/admin");
-                    } else if (role.equals("ROLE_USER")) {
-                        return Stream.of("/user/profile");
-                    } else {
-                        return Stream.empty();
-                    }
-                })
+                .flatMap(role -> role.equals("ROLE_ADMIN") ? Stream.of("/admin/edit_panel") :
+                        role.equals("ROLE_USER") ? Stream.of("/user/profile") :
+                                Stream.empty())
                 .findFirst()
                 .orElse("/login");
 

@@ -43,7 +43,6 @@ public class ApplicationStart implements ApplicationRunner {
         admin.setEmail("admin@admin.com");
         admin.setBio("i am admin");
         admin.setPassword(passwordEncoder.encode("admin"));
-        admin.addRole(userRole);
         admin.addRole(adminRole);
         entityManager.persist(admin);
     }

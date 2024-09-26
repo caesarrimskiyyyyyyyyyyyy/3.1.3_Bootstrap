@@ -12,7 +12,7 @@ import ru.javamentor.SpringSecurity.services.UserServiceImpl;
 
 @Controller
 @RequestMapping("/user")
-@PreAuthorize("hasRole('ROLE_USER')")
+@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 public class UserController {
     private final UserServiceImpl userService;
 
@@ -24,7 +24,7 @@ public class UserController {
     @GetMapping("/profile")
     public String userProfile(Authentication authentication, Model model) {
         String username = authentication.getName();
-        User user = userService.findUserByUsername(username);
+        User user = userService.getUserByUsername(username);
         model.addAttribute("user", user);
         return "user/profile";
     }

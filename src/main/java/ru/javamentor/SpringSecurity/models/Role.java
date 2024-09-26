@@ -1,7 +1,15 @@
 package ru.javamentor.SpringSecurity.models;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToMany;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.HashSet;
@@ -9,10 +17,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "roles")
-@NoArgsConstructor
-@AllArgsConstructor
 @Setter
 @Getter
+@NoArgsConstructor
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +38,5 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return "ROLE_" + roleName;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "roleName='" + roleName + '\'' +
-                '}';
     }
 }

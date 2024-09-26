@@ -1,8 +1,16 @@
 package ru.javamentor.SpringSecurity.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,24 +20,26 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
-@AllArgsConstructor
 @Setter
 @Getter
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Size(min = 3, max = 80)
     @Column(name = "email")
     private String email;
 
-    @Size(min = 3, max = 45, message = "at least 3 characters")
-    @Column(name = "user_name", nullable = false, unique = true)
+    @Size(min = 3)
+    @NotBlank(message = "Please come up with a username")
+    @Column(name = "user_name", unique = true)
     private String username;
 
-    @Size(min = 3, max = 128, message = "at least 3 characters")
-    @Column(name = "user_password", nullable = false, unique = true)
+    @Size(min = 3, max = 128)
+    @NotBlank(message = "Please come up with a password")
+    @Column(name = "user_password", unique = true)
     private String password;
 
     @Column(name = "bio")
@@ -46,17 +56,5 @@ public class User {
     public void addRole(Role role) {
         this.roles.add(role);
         role.getUsers().add(this);
-    }
-
-    public void removeRole(Role role) {
-        this.roles.remove(role);
-        role.getUsers().remove(this);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                '}';
     }
 }
