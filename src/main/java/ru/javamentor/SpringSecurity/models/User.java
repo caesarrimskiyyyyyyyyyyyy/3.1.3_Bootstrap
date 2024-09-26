@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -28,17 +29,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 3, max = 80)
-    @Column(name = "email")
+    @Email
+    @Size(min = 6, max = 80)
+    @NotBlank(message = "Please provide your email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Size(min = 3)
-    @NotBlank(message = "Please come up with a username")
+    @NotBlank(message = "Please provide your name")
     @Column(name = "user_name", unique = true)
     private String username;
 
     @Size(min = 3, max = 128)
-    @NotBlank(message = "Please come up with a password")
+    @NotBlank(message = "Please provide your password")
     @Column(name = "user_password", unique = true)
     private String password;
 
