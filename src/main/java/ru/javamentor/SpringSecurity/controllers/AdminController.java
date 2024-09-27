@@ -3,6 +3,7 @@ package ru.javamentor.SpringSecurity.controllers;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +29,10 @@ public class AdminController {
     }
 
     @GetMapping("/edit_panel")
-    public String getShowAllUsers(Model model) {
+    public String getShowAllUsers(Authentication authentication, Model model) {
         model.addAttribute("users", userService.getAllUsersWithRole());
+        model.addAttribute("user", userService.getUserByUsername(authentication.getName()));
+        model.addAttribute("roles", roleService.getAllRoles());
         return "admin/edit_panel";
     }
 
