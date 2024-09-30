@@ -16,6 +16,4 @@ public interface UserService extends UserDetailsService {
     void saveUser(User user);
 
     void deleteUser(Long id);
-
-    User getUserById(long id);
 }

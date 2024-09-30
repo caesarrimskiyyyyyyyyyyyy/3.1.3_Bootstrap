@@ -36,13 +36,6 @@ public class AdminController {
         return "admin/edit_panel";
     }
 
-    @GetMapping("/edit_panel/new_user")
-    public String getCreateUserForm(Model model) {
-        model.addAttribute("roles", roleService.getAllRoles());
-        model.addAttribute("users", new User());
-        return "admin/new_user";
-    }
-
     @PostMapping("/edit_panel/new_user")
     public String createUser(@ModelAttribute("user") @Valid User user) {
         userService.saveUser(user);
@@ -53,13 +46,6 @@ public class AdminController {
     public String deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin/edit_panel";
-    }
-
-    @GetMapping("/edit_panel/edit_user")
-    public String getEditUserForm(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("roles", roleService.getAllRoles());
-        model.addAttribute("users", userService.getUserById(id));
-        return "admin/edit_user";
     }
 
     @PostMapping("/edit_panel/edit_user")

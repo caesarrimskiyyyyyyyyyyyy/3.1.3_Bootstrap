@@ -1,6 +1,5 @@
 package ru.javamentor.SpringSecurity.services;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,11 +56,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public User getUserById(long id) {
-        return userRepository.findUserByIdWithRole(id)
-                .orElseThrow(() -> new EntityNotFoundException(id + " not found"));
     }
 }
