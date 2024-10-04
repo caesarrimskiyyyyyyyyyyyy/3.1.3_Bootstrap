@@ -19,7 +19,7 @@
         <div class="col-8 justify-content-lg-start">
             <span th:text="${user.getUsername()}" class="text-white fw-bold"></span>
             <span class="text-white"> with roles: </span>
-            <span th:each="role : ${roles}" th:text="${role.getRoleName()} + ' '" class="text-white"></span>
+            <span th:each="role : ${user.getRoles()}" th:text="${role.getRoleName()} + ' '" class="text-white"></span>
         </div>
         <div class="col-4 justify-content-lg-end">
             <form th:action="@{/logout}" method="post" class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -88,7 +88,11 @@
                                         <td th:text="${user.getEmail()}"></td>
                                         <td th:text="${user.getUsername()}"></td>
                                         <td th:text="${user.getBio()}"></td>
-                                        <td th:each="role : ${user.getRoles()}" th:text="${role.getRoleName()}"></td>
+                                        <td>
+                                            <span th:each="role : ${user.getRoles()}"
+                                                  th:text="${role.getRoleName()} + ' '">
+                                            </span>
+                                        </td>
                                         <td>
                                             <button class="btn btn-info btn-sm text-white"
                                                     data-bs-toggle="modal"
@@ -178,7 +182,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="btn bg-danger text-white" data-bs-toggle="modal"
+                                            <button class="btn bg-danger btn-sm text-white" data-bs-toggle="modal"
                                                     th:data-bs-target="${'#deleteModal' + user.getId()}">Delete
                                             </button>
                                             <!-- delete -->
