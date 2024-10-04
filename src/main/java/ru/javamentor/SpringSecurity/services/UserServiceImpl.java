@@ -2,12 +2,10 @@ package ru.javamentor.SpringSecurity.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.javamentor.SpringSecurity.dto.UserDetailsImpl;
 import ru.javamentor.SpringSecurity.models.User;
 import ru.javamentor.SpringSecurity.repositories.UserRepository;
 
@@ -24,14 +22,6 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User foundedUser = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
-
-        return new UserDetailsImpl(foundedUser);
     }
 
     @Override
