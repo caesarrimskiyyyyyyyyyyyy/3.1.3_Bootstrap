@@ -50,7 +50,7 @@ public class AdminController {
 
     @PostMapping("/edit_panel/edit_user")
     public String editUser(@ModelAttribute("user") @Valid User user) {
-        userService.saveUser(user);
+        userService.updateUser(user);
         return "redirect:/admin/edit_panel";
     }
 }
